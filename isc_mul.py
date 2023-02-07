@@ -101,8 +101,8 @@ if __name__=="__main__":
     bit = 16
     # test_range=pow(2,bit)  
     test_range=1000  
-    num_2=19
-    num_1=20
+    num_2=555
+    num_1=777
     exact_res=num_1*num_2
 
     isc_res=ISC_MUL(num_1,num_2,sobol_1,sobol_2,bit)
