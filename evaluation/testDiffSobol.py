@@ -23,10 +23,10 @@ def generate_df(sobolGroups ,mredGroup  , validSegWidth ,sobolWidth ):
     data={"MRED:":dfMred,"validSegWidth":dfValidSegWidth,"sobolWidth":dfSobolWidth}
     df=pd.DataFrame(data,index=dfIndex)
     # file_path_split=file_path.split('\\')
-    print("***********************************")
-    print(df)
+    # print("***********************************")
+    # print(df)
     # print(file_path)
-    print("***********************************")
+    # print("***********************************")
     # to_csv_path="validSegWidth_%d_sobolWidth_%d_MRED_Result.csv"%(validSegWidth,sobolWidth)
     # df.to_csv(to_csv_path)
     return df
@@ -42,21 +42,8 @@ if __name__=="__main__":
     num_1=213 <<3 
     num_2=100
     exact_res=num_1*num_2
-    validSegWidth = 6
     sobolWidth = 5
-    print(to_bin(num_1 ,32))
-    print(to_bin(num_2 ,32))
-    isc_res=scaled_mul(num_1,num_2,sobol_1,sobol_2,sobolWidth=sobolWidth ,validSegWidth=5,dataWidth=16)
-
-    isc_res=scaled_mul(num_1,num_2,sobol_1,sobol_2,sobolWidth=sobolWidth ,validSegWidth =6,dataWidth=16)
-    isc_res=scaled_mul(num_1,num_2,sobol_1,sobol_2,sobolWidth=sobolWidth ,validSegWidth =7,dataWidth=16)
-    isc_res=scaled_mul(num_1,num_2,sobol_1,sobol_2,sobolWidth=sobolWidth ,validSegWidth =8,dataWidth=16)
-    isc_res=scaled_mul(num_1,num_2,sobol_1,sobol_2,sobolWidth=sobolWidth ,validSegWidth =8,dataWidth=16)
-    ED = abs(exact_res-isc_res)
-    error= ED/exact_res
-    # print(error)
-    # print("error = %.2lf"%(error*100)+"%")
-
+    
     group_1=[sobol_1,sobol_2]
     group_2=[sobol_1,sobol_3]
     group_3=[sobol_1,sobol_4]
@@ -64,19 +51,43 @@ if __name__=="__main__":
     group_5=[sobol_2,sobol_4]
     group_6=[sobol_3,sobol_4]
     
-    # sobolGroups=[group_1,group_2,group_3,group_4,group_5,group_6]
+    sobolGroups=[group_1,group_2,group_3,group_4,group_5,group_6]
     # sobolGroups=[group_1]
-    sobolGroups=[group_1,group_2,group_3]
+    # sobolGroups=[group_1,group_2,group_3]
 
-    testRange=(100,255)    
-    iterationRange=pow(2,2)  
-    writer = pd.ExcelWriter('test.xlsx')
-    for i in range (5,8):
-        print("test validSegmentWidth = %d"%(i))
-        mredGroup ,averageMRED =  excute_scaled_mul(sobolGroups =sobolGroups,testRange = testRange , 
-                                                    iterationRange =iterationRange, validSegWidth =i ,
-                                                    sobolWidth =sobolWidth, dataWidth =dataWidth )
-        df = generate_df(sobolGroups ,mredGroup  , i ,sobolWidth )
-        df.to_excel(writer,sheet_name='test_%d'%i)
+    testRange=(1,255)    
+    iterationRange=255*255
+    validSegWidth = 16
+    # writer = pd.ExcelWriter('test.xlsx')
+        
+    mredGroup = []
+    for i in range (len(sobolGroups)):
+        mredGroup.append(0)
     
-    writer.save()
+    for test in range(iterationRange):
+        num_1=random.randint(testRange[0],testRange[1])
+        num_2=random.randint(testRange[0],testRange[1])
+        exact_res=num_1*num_2
+        # print("num1 = %d, num2 = %d,error = "%(num_1,num_2),end='')
+        print("num1=%d,num2=%d,exact_res=%d"%(num_1,num_2,exact_res))
+        for i in range(len(sobolGroups)):
+            isc_res=scaled_mul(
+                num_1=num_1,num_2=num_2,
+                sobol_1= sobolGroups[i][0],sobol_2= sobolGroups[i][1],validSegWidth=validSegWidth,
+                sobolWidth= sobolWidth,dataWidth=  dataWidth
+            )
+            ED = abs(exact_res-isc_res)
+            error= ED/exact_res
+            mredGroup[i]+=(error)
+            print(isc_res,error, end=' ')
+        print('\n')
+
+    mredGroup = [mredGroup [i] /iterationRange for i in range(len(mredGroup))]
+
+    for i in range(len(mredGroup)):
+        
+        print("MRED %d = %.4lf"%(i+1,mredGroup[i]*100)+"% ",end=' ')
+    averageMRED = statistics.mean(mredGroup)
+    print("\naverage MRED = %.4lf"%(averageMRED*100)+"%")
+
+    # return mredGroup ,averageMRED

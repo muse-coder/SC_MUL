@@ -10,16 +10,15 @@ def stream_gen(operator,sobol_sequence ,validSegWidth,sobolWidth):
     operatorBinary=(to_bin(operator,validSegWidth))
     # print("operator:" + operatorBinary)
     scaled_sobol_sequence = [sobol_sequence[i]<<(validSegWidth - sobolWidth) for i in range(len(sobol_sequence))]
-    # print("sobol: " )
-    # print(scaled_sobol_1)
     # for i in range(length):
     #     print(to_bin(scaled_sobol_sequence[i],validSegWidth))
+
     for i in range(length):
-        # print(to_bin(scaled_sobol_sequence[i],validSegWidth))
-        if operator > (sobol_sequence[i]<<(validSegWidth - sobolWidth)):
+        if operator > (scaled_sobol_sequence[i]):
             bit_stream.append(1)
         else:
             bit_stream.append(0)
+    
     return bit_stream        
 
 def calculate(sequence_1,sequence_2):
@@ -27,7 +26,7 @@ def calculate(sequence_1,sequence_2):
     APC=0
     for i in range(length):
         APC  += sequence_1[i] & sequence_2[i]
-    # print("APC=%d"%APC)
+    # print("APC=%d "%APC,end=' ')
     return APC
 
 def scaled_mul(num_1,num_2,sobol_1,sobol_2,validSegWidth,sobolWidth,dataWidth=16):
@@ -103,45 +102,43 @@ def sliding_window(value,dataWidth,validSegWidth):
     
     return scaled_num,shift_count
 
-def excute_scaled_mul(sobolGroups ,testRange , iterationRange , validSegWidth ,sobolWidth ,dataWidth ):
-    errorSum = 0
-    mredGroup = []
-    # print("validSegWidth= %d"%validSegWidth)
-    for i in range (len(sobolGroups)):
-        mredGroup.append(0)
-
-    for test in range(iterationRange):
-        num_1=random.randint(testRange[0],testRange[1])
-        num_2=random.randint(testRange[0],testRange[1])
-        exact_res=num_1*num_2
-        # print("num1 = %d, num2 = %d,error = "%(num_1,num_2),end='')
-        averageError= 0
-        print("num1=%d,num2=%d,exact_res=%d"%(num_1,num_2,exact_res))
-        for i in range(len(sobolGroups)):
-            isc_res=scaled_mul(
-                num_1=num_1,num_2=num_2,
-                sobol_1= sobolGroups[i][0],sobol_2= sobolGroups[i][1],validSegWidth= validSegWidth,
-                sobolWidth= sobolWidth,dataWidth=  dataWidth
-            )
-            ED = abs(exact_res-isc_res)
-            error= ED/exact_res
-            mredGroup[i] +=error
-        # print(error)
-            print("isc_res=%d error %d= %.4lf"%(isc_res,i+1,error*100)+"%",end= ' ;')
-            averageError+=error
-        averageError = averageError /len(sobolGroups)  
-        print("\naverage Error: %.4lf"%(averageError*100)+"%")
-        errorSum += averageError 
-    # MRED=errorSum/iterationRange
-    # print("average MRED = %.4lf"%(MRED*100)+"%")
-    
-    mredGroup = [mredGroup [i] /iterationRange for i in range(len(mredGroup))]
-
-    for i in range(len(mredGroup)):
+# def excute_scaled_mul(sobolGroups ,testRange , iterationRange , validSegWidthRange ,sobolWidth ,dataWidth ):
+#     mredGroup = []
+#     for i in range (len(sobolGroups)):
+#         mredGroup.append([])
         
-        print("MRED %d = %.4lf"%(i+1,mredGroup[i]*100)+"% ",end=' ')
-    averageMRED = statistics.mean(mredGroup)
-    print("\naverage MRED = %.4lf"%(averageMRED*100)+"%")
+#     for test in range(iterationRange):
+#         num_1=random.randint(testRange[0],testRange[1])
+#         num_2=random.randint(testRange[0],testRange[1])
+#         exact_res=num_1*num_2
+#         print("num1 = %d, num2 = %d,error = "%(num_1,num_2),end='')
+#         print("num1=%d,num2=%d,exact_res=%d"%(num_1,num_2,exact_res))
+#         for i in range(len(sobolGroups)):
+#             for segWidth in range(validSegWidthRange[0],validSegWidthRange[1]):
+#                 isc_res=scaled_mul(
+#                     num_1=num_1,num_2=num_2,
+#                     sobol_1= sobolGroups[i][0],sobol_2= sobolGroups[i][1],validSegWidth=segWidth,
+#                     sobolWidth= sobolWidth,dataWidth=  dataWidth
+#                 )
+#                 ED = abs(exact_res-isc_res)
+#                 error= ED/exact_res
+#                 mredGroup[i].append(error)
+#         # print(error)
+#             # print("isc_res=%d error %d= %.4lf"%(isc_res,i+1,error*100)+"%",end= ' ;')
+#             # averageError+=error
+#         # averageError = averageError /len(sobolGroups)  
+#         # print("\naverage Error: %.4lf"%(averageError*100)+"%")
+#         # errorSum += averageError 
+#     # MRED=errorSum/iterationRange
+#     # print("average MRED = %.4lf"%(MRED*100)+"%")
+    
+#     mredGroup = [mredGroup [i] /iterationRange for i in range(len(mredGroup))]
 
-    return mredGroup ,averageMRED
+#     for i in range(len(mredGroup)):
+        
+#         print("MRED %d = %.4lf"%(i+1,mredGroup[i]*100)+"% ",end=' ')
+#     averageMRED = statistics.mean(mredGroup)
+#     print("\naverage MRED = %.4lf"%(averageMRED*100)+"%")
+
+#     return mredGroup ,averageMRED
 
