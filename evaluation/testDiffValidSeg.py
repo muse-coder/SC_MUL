@@ -2,7 +2,7 @@ from SC_MUL.components import *
 import pandas as pd
 import statistics
 import os
-def generate_df(mredGroup  , segRange ,sobolWidth ):
+def generate_df(mredGroup  , segRange ,savingPath ):
     # dfIndex=[]
     dfMred=[]
     dfValidSegWidth=[]
@@ -21,9 +21,10 @@ def generate_df(mredGroup  , segRange ,sobolWidth ):
     # print(file_path)
     print("***********************************")
     print(os.getcwd())
-    to_csv_path="./evaluation/result/ValidSegResult_"+str(pow(2,sobolWidth))+".csv"
+    
+    # to_csv_path="./evaluation/result/ValidSegResult_"+str(pow(2,sobolWidth))+".csv"
     to_excel_path="./evaluation/result/testDiffValidSeg.xls"
-    df.to_csv(to_csv_path)
+    df.to_csv(savingPath)
     # df.to_excel(to_csv_path,index=False)
     return df
     
@@ -38,10 +39,16 @@ if __name__=="__main__":
     sobol_3=  [0,32,16,48,40,8,56,24,60,28,44,12,20,52,4,36,30,62,14,46,54,22,38,6,34,2,50,18,10,42,26,58,45,13,61,29,5,37,21,53,17,49,1,33,57,25,41,9,51,19,35,3,27,59,11,43,15,47,31,63,39,7,55,23]
     sobol_4=  [0,32,16,48,56,24,40,8,28,60,12,44,36,4,52,20,42,10,58,26,18,50,2,34,54,22,38,6,14,46,30,62,35,3,51,19,27,59,11,43,63,31,47,15,7,39,23,55,9,41,25,57,49,17,33,1,21,53,5,37,45,13,61,29]
 
+####################################################
+    dataWidth = 16                               ###
+    sobolWidth = 6                               ###
+    dataRange=(1,pow(2,8))                      ###
+    iterationRange=dataRange[1]                  ###
+    # validSegWidth = 16                         ###                
+    # writer = pd.ExcelWriter('test.xlsx')       ###
+    segRange = (sobolWidth,17)                   ###
+####################################################
 
-    dataWidth = 16
-    sobolWidth = 6
-    
     group_1=[sobol_1,sobol_2]
     group_2=[sobol_1,sobol_3]
     group_3=[sobol_1,sobol_4]
@@ -49,15 +56,24 @@ if __name__=="__main__":
     group_5=[sobol_2,sobol_4]
     group_6=[sobol_3,sobol_4]
     
-    # sobolGroups=[group_1,group_2,group_3,group_4,group_5,group_6]
-    # sobolGroups=[group_1]
-    sobolGroups=[group_2]
+    workingPath = os.getcwd()
+    
+    savingPath=workingPath+'/evaluation/result'
+    if not (os.path.exists(savingPath)):
+        # savingPath=workingPath+'/result'
+        os.mkdir(savingPath)
+    
+    savingPath = savingPath +'/testDiffValidSeg'
+    if not (os.path.exists(savingPath)):
+        os.mkdir(savingPath)
+        
+    savingPath = savingPath +'/dataRange_1_to_'+str(dataRange[1])
+    if not (os.path.exists(savingPath)):
+        os.mkdir(savingPath)
 
-    dataRange=(1,pow(2,8))     
-    iterationRange=pow(2,8)
-    # validSegWidth = 16
-    # writer = pd.ExcelWriter('test.xlsx')
-    segRange = (sobolWidth,17)    
+    resultName = "sobol_%d.csv"%(pow(2,sobolWidth))
+    savingPath = savingPath + '/'+ resultName
+
     mredGroup = []
     for i in range (segRange[1]-segRange[0]):
         mredGroup.append(0)
@@ -88,5 +104,5 @@ if __name__=="__main__":
     averageMRED = statistics.mean(mredGroup)
     print("\naverage MRED = %.4lf"%(averageMRED*100)+"%")
 
-    df = generate_df(mredGroup  , segRange ,sobolWidth  )
+    df = generate_df(mredGroup  , segRange  ,savingPath )
     # return mredGroup ,averageMRED
