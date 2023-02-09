@@ -38,7 +38,7 @@ if __name__=="__main__":
     sobolWidth = int(math.log(len(sobol_1),2))        ###       
     validSegWidth = sobolWidth+1                      ###
     # validSegWidth = 16                              ###
-    dataRange=(1,pow(2,16))                           ###
+    dataRange=(1,pow(2,8))                           ###
     iterationRange=dataRange[1]                       ###
 #########################################################
 

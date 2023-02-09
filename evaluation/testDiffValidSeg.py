@@ -2,6 +2,7 @@ from SC_MUL.components import *
 import pandas as pd
 import statistics
 import os
+import math
 def generate_df(mredGroup  , segRange ,savingPath ):
     # dfIndex=[]
     dfMred=[]
@@ -41,7 +42,7 @@ if __name__=="__main__":
 
 ####################################################
     dataWidth = 16                               ###
-    sobolWidth = 6                               ###
+    sobolWidth = int(math.log(len(sobol_1),2))                              ###
     dataRange=(1,pow(2,8))                      ###
     iterationRange=dataRange[1]                  ###
     # validSegWidth = 16                         ###                
