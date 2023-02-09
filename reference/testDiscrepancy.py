@@ -13,8 +13,10 @@ import random
 #     print((ran))
 
 
-seed_list =  random.sample(range(0,64),10 )
-print(seed_list)
+# seed_list =  random.sample(range(0,64),10 )
+seed_list = [1,2,3,4,5]
+
+# print(seed_list)
 for i in range(len(seed_list)):
     sampler = qmc.Sobol(d=1, scramble=True,seed=seed_list[i])
     sample = sampler.random_base2(m=5)
@@ -23,5 +25,5 @@ for i in range(len(seed_list)):
     for j in range(len(list)):
         print(int(list[j][0]*32),end=',')
 # print(sample.tolist())
-    print('\n',end='')
+    # print('\n',end='')
     print('\n%lf'%qmc.discrepancy(sample))
