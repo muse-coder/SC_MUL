@@ -8,10 +8,10 @@ def stream_gen(operator,sobol_sequence ,validSegWidth,sobolWidth):
     length = len(sobol_sequence)
     bit_stream = []
     operatorBinary=(to_bin(operator,validSegWidth))
-    print("operator:" + operatorBinary)
+    # print("operator:" + operatorBinary)
     scaled_sobol_sequence = [sobol_sequence[i]<<(validSegWidth - sobolWidth) for i in range(len(sobol_sequence))]
-    for i in range(length):
-        print(to_bin(scaled_sobol_sequence[i],validSegWidth))
+    # for i in range(length):
+    #     print(to_bin(scaled_sobol_sequence[i],validSegWidth))
 
     for i in range(length):
         if operator > (scaled_sobol_sequence[i]):
@@ -29,6 +29,15 @@ def calculate(sequence_1,sequence_2):
     # print("APC=%d "%APC,end=' ')
     return APC
 
+def GenerateScaledSeq(length,dataWidth):
+    Seq=[]
+    for i in range(0,length):
+        # k =int(i*pow(2,length)/length)
+        Seq.append(i)
+    return Seq
+
+    
+
 def scaled_mul(num_1,num_2,sobol_1,sobol_2,validSegWidth,sobolWidth,dataWidth=16):
     scaled_num_1 , num_1_shift = sliding_window(num_1,dataWidth= dataWidth  ,validSegWidth=validSegWidth)
     scaled_num_2 , num_2_shift = sliding_window(num_2,dataWidth= dataWidth  ,validSegWidth=validSegWidth)
@@ -45,7 +54,7 @@ def scaled_mul(num_1,num_2,sobol_1,sobol_2,validSegWidth,sobolWidth,dataWidth=16
     # for j in sobol_2:
         # print(to_bin(j,dataWidth))
 
-
+    sobol_2 = GenerateScaledSeq(len(sobol_1),dataWidth)
     bit_stream_1 = stream_gen(operator=  scaled_num_1,sobol_sequence=  sobol_1,validSegWidth= validSegWidth, sobolWidth= sobolWidth)
     bit_stream_2 = stream_gen(operator=  scaled_num_2,sobol_sequence=  sobol_2,validSegWidth= validSegWidth, sobolWidth= sobolWidth)
     # print("bit_stream_1:",bit_stream_1)
@@ -64,16 +73,24 @@ def scaled_mul(num_1,num_2,sobol_1,sobol_2,validSegWidth,sobolWidth,dataWidth=16
     # print("%.4lf"%(error*100)+"%")
     return res
 
-    
+def RepresentationError(num_1,Sobol_1,validSegWidth,sobolWidth,dataWidth=16):
+    scaled_num_1 , num_1_shift = sliding_window(num_1,dataWidth= dataWidth  ,validSegWidth=validSegWidth)
+    bit_stream_1 = stream_gen(operator=  scaled_num_1,sobol_sequence=Sobol_1,validSegWidth= validSegWidth, sobolWidth= sobolWidth)
+    length = len(bit_stream_1)
+    APC=0
+    for i in range(length):
+        APC  += bit_stream_1[i]
+    approx_num = APC << (dataWidth-sobolWidth)
+    return approx_num
 
 def to_bin(value, num):#十进制数据，二进制位宽
-	bin_chars = ""
-	temp = value
-	for i in range(num):
-		bin_char = bin(temp % 2)[-1]
-		temp = temp // 2
-		bin_chars = bin_char + bin_chars
-	return bin_chars.upper()#输出指定位宽的二进制字符串
+    bin_chars = ""
+    temp = value
+    for i in range(num):
+        bin_char = bin(temp % 2)[-1]
+        temp = temp // 2
+        bin_chars = bin_char + bin_chars
+    return bin_chars.upper()#输出指定位宽的二进制字符串
 
 
 def sliding_window(value,dataWidth,validSegWidth):

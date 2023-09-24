@@ -55,7 +55,7 @@ if __name__=="__main__":
     iterationRange=dataRange[1]                  ###
     # validSegWidth = 16                         ###                
     # writer = pd.ExcelWriter('test.xlsx')       ###
-    segRange = (sobolWidth,17)                   ###
+    segRange = (3,17)                   ###
 ####################################################
 
     group_1=[sobol_1,sobol_2]
@@ -88,19 +88,16 @@ if __name__=="__main__":
         mredGroup.append(0)
     
     for test in range(iterationRange):
-        num_1=random.randint(dataRange[0],dataRange[1])
-        num_2=random.randint(dataRange[0],dataRange[1])
-        exact_res=num_1*num_2
+        num_1=random.randint(int(dataRange[1]/2),dataRange[1])
+        # num_2=random.randint(dataRange[0],dataRange[1])
+        # exact_res=num_1*num_2
         # print("num1 = %d, num2 = %d,error = "%(num_1,num_2),end='')
         # print("num1=%d,num2=%d,exact_res=%d"%(num_1,num_2,exact_res))
         for validSegWidth in  range(segRange[0],segRange[1]):
+            approx_num = RepresentationError(num_1=num_1,Sobol_1=sobol_1,validSegWidth=validSegWidth,sobolWidth=sobolWidth,dataWidth=dataWidth)
             # print(validSegWidth)
-            isc_res=scaled_mul(
-                num_1=num_1,num_2=num_2,
-                sobol_1= group_1[0],sobol_2= group_1[1],validSegWidth=validSegWidth,
-                sobolWidth= sobolWidth,dataWidth=  dataWidth
-            )
-            error = abs(isc_res/(exact_res)-1)
+            ED = abs(num_1-approx_num)
+            error= ED/num_1
             mredGroup[validSegWidth-segRange[0]]+=(error)
             # print(isc_res,error, end=' ')
         # print('\n')
