@@ -67,8 +67,11 @@ def scaled_mul(num_1,num_2,sobol_1,sobol_2,validSegWidth,sobolWidth,dataWidth=16
     else:
         res = scaled_res >>(-shiftSum)
     # print(res)
-    ED = abs(exact_res-res)
-    error= ED/exact_res
+    # ED = abs(exact_res-res)
+    error = abs(res/(exact_res)-1)
+    # if (error>1):
+    #     print("error")
+    # error= ED/exact_res
     # print("num1 = %d, num2 = %d,error = "%(num_1,num_2),end='')
     # print("%.4lf"%(error*100)+"%")
     return res
@@ -99,21 +102,21 @@ def sliding_window(value,dataWidth,validSegWidth):
     length=len(bin_str)
     shift_count=0
     count=0
-    for i in range(length):
-        if bin_str[i]=='0':
-           count+=1
-           continue 
-        else:
-            break
+    # for i in range(length):
+    #     if bin_str[i]=='0':
+    #        count+=1
+    #        continue 
+    #     else:
+    #         break
     valid_segment=[]
-    if(count<length-validSegWidth):
-        valid_segment=bin_str[count:count + validSegWidth]
+    # if(count<length-validSegWidth):
+    valid_segment=bin_str[0:validSegWidth]
         # shift_count = -(dataWidth-count-validSegWidth)
-    else:
-        valid_segment=bin_str[count:length] 
-        for i in range(validSegWidth-(length-count)):
-            valid_segment = valid_segment + '0'
-        # shift_count = count+validSegWidth-dataWidth
+    # else:
+        # valid_segment=bin_str[count:length] 
+    # for i in range(validSegWidth-(length-count)):
+    #         valid_segment = valid_segment + '0'
+    #     # shift_count = count+validSegWidth-dataWidth
     shift_count = count
     scaled_num=int(valid_segment, 2)
     
