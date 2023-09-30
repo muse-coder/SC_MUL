@@ -39,6 +39,8 @@ def GenerateScaledSeq(length,dataWidth):
     
 
 def scaled_mul(num_1,num_2,sobol_1,sobol_2,validSegWidth,sobolWidth,dataWidth=16):
+    # if(num_1<100 or num_2 <100):
+    #     print("1")
     scaled_num_1 , num_1_shift = sliding_window(num_1,dataWidth= dataWidth  ,validSegWidth=validSegWidth)
     scaled_num_2 , num_2_shift = sliding_window(num_2,dataWidth= dataWidth  ,validSegWidth=validSegWidth)
     # print("validSegWidth =%d"%validSegWidth)
@@ -60,6 +62,8 @@ def scaled_mul(num_1,num_2,sobol_1,sobol_2,validSegWidth,sobolWidth,dataWidth=16
     # print("bit_stream_1:",bit_stream_1)
     # print("bit_stream_2:",bit_stream_2)
     scaled_res = calculate(bit_stream_1,bit_stream_2)
+    # if(scaled_res==0):
+    #     scaled_res =1 
     shiftSum = 2*dataWidth-sobolWidth-num_1_shift-num_2_shift
     exact_res = num_1 * num_2
     if(shiftSum >=0):
