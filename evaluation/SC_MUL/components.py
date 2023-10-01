@@ -76,13 +76,18 @@ def scaled_mul(num_1,num_2,sobol_1,sobol_2,validSegWidth,sobolWidth,dataWidth=16
     return res
 
 def RepresentationError(num_1,Sobol_1,validSegWidth,sobolWidth,dataWidth=16):
-    scaled_num_1 , num_1_shift = sliding_window(num_1,dataWidth= dataWidth  ,validSegWidth=validSegWidth)
+    scaled_num_1 , num_1_shift = sliding_window_no_expansion(num_1,dataWidth= dataWidth  ,validSegWidth=validSegWidth)
     bit_stream_1 = stream_gen(operator=  scaled_num_1,sobol_sequence=Sobol_1,validSegWidth= validSegWidth, sobolWidth= sobolWidth)
     length = len(bit_stream_1)
     APC=0
     for i in range(length):
         APC  += bit_stream_1[i]
-    approx_num = APC << (dataWidth-sobolWidth)
+    if(dataWidth-sobolWidth-num_1_shift<0):
+           approx_num = APC >> abs(dataWidth-sobolWidth-num_1_shift)
+    else:
+           approx_num = APC << (dataWidth-sobolWidth-num_1_shift)
+    if(abs(num_1-approx_num)>num_1):
+        print("error")
     return approx_num
 
 def to_bin(value, num):#十进制数据，二进制位宽
@@ -117,6 +122,26 @@ def sliding_window(value,dataWidth,validSegWidth):
             valid_segment = valid_segment + '0'
         # shift_count = count+validSegWidth-dataWidth
     shift_count = count
+    scaled_num=int(valid_segment, 2)
+    
+    return scaled_num,shift_count
+
+
+def sliding_window_no_expansion(value,dataWidth,validSegWidth):
+    bin_str=to_bin(value,dataWidth)
+    # # print(bin_str)
+    length=len(bin_str)
+    shift_count=0
+    valid_segment=[]
+    if(0<length-validSegWidth):
+        valid_segment=bin_str[0:validSegWidth]
+        # shift_count = -(dataWidth-count-validSegWidth)
+    else:
+        valid_segment=bin_str[0:length] 
+        for i in range(validSegWidth-(length-0)):
+            valid_segment = valid_segment + '0'
+        # shift_count = count+validSegWidth-dataWidth
+    shift_count = 0
     scaled_num=int(valid_segment, 2)
     
     return scaled_num,shift_count

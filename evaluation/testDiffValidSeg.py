@@ -31,14 +31,14 @@ def generate_df(mredGroup  , segRange ,savingPath ):
     
 
 if __name__=="__main__":
-    # sobol_1 = [0,4,6,2,3,7,5,1]
-    # sobol_2 = [0,4,2,6,3,7,1,5]
-    # sobol_3 = [0,4,2,6,5,1,7,3]
-    # sobol_4 = [0,4,2,6,7,3,5,1]
-    sobol_1 = [0,8,12,4,6,14,10,2,3,11,15,7,5,13,9,1]
-    sobol_2 = [0,8,4,12,6,14,2,10,5,13,1,9,3,11,7,15]
-    sobol_3 = [0,8,4,12,10,2,14,6,15,7,11,3,5,13,1,9]
-    sobol_4 = [0,8,4,12,14,6,10,2,7,15,3,11,9,1,13,5]
+    sobol_1 = [0,4,6,2,3,7,5,1]
+    sobol_2 = [0,4,2,6,3,7,1,5]
+    sobol_3 = [0,4,2,6,5,1,7,3]
+    sobol_4 = [0,4,2,6,7,3,5,1]
+    # sobol_1 = [0,8,12,4,6,14,10,2,3,11,15,7,5,13,9,1]
+    # sobol_2 = [0,8,4,12,6,14,2,10,5,13,1,9,3,11,7,15]
+    # sobol_3 = [0,8,4,12,10,2,14,6,15,7,11,3,5,13,1,9]
+    # sobol_4 = [0,8,4,12,14,6,10,2,7,15,3,11,9,1,13,5]
     # sobol_1=[0,16,24,8,12,28,20,4,6,22,30,14,10,26,18,2,3,19,27,11,15,31,23,7,5,21,29,13,9,25,17,1]
     # sobol_2=[0,16,8,24,12,28,4,20,10,26,2,18,6,22,14,30,15,31,7,23,3,19,11,27,5,21,13,29,9,25,1,17]
     # sobol_3=[0,16,8,24,20,4,28,12,30,14,22,6,10,26,2,18,15,31,7,23,27,11,19,3,17,1,25,9,5,21,13,29]
@@ -93,8 +93,8 @@ if __name__=="__main__":
         mredGroup.append(0)
     
     for test in range(iterationRange):
-        num_1=random.randint(dataRange[0],dataRange[1])
-        num_2=random.randint(dataRange[0],dataRange[1])
+        num_1=random.randint(dataRange[0],dataRange[1]-1)
+        num_2=random.randint(dataRange[0],dataRange[1]-1)
         exact_res=num_1*num_2
         # print("num1 = %d, num2 = %d,error = "%(num_1,num_2),end='')
         # print("num1=%d,num2=%d,exact_res=%d"%(num_1,num_2,exact_res))
@@ -118,5 +118,5 @@ if __name__=="__main__":
     averageMRED = statistics.mean(mredGroup)
     print("\naverage MRED = %.4lf"%(averageMRED*100)+"%")
 
-    df = generate_df(mredGroup  , segRange  ,savingPath )
+    # df = generate_df(mredGroup  , segRange  ,savingPath )
     # return mredGroup ,averageMRED
