@@ -9,10 +9,12 @@ def stream_gen(operator,sobol_sequence ,validSegWidth,sobolWidth):
     bit_stream = []
     operatorBinary=(to_bin(operator,validSegWidth))
     # print("operator:" + operatorBinary)
-    scaled_sobol_sequence = [sobol_sequence[i]<<(validSegWidth - sobolWidth) for i in range(len(sobol_sequence))]
-    # for i in range(length):
-    #     print(to_bin(scaled_sobol_sequence[i],validSegWidth))
-
+    if (validSegWidth - sobolWidth >0):        
+        scaled_sobol_sequence = [sobol_sequence[i]<<(validSegWidth - sobolWidth) for i in range(len(sobol_sequence))]
+    
+    else:
+        scaled_sobol_sequence = [sobol_sequence[i]>>abs(validSegWidth - sobolWidth) for i in range(len(sobol_sequence))]
+    
     for i in range(length):
         if operator > (scaled_sobol_sequence[i]):
             bit_stream.append(1)
