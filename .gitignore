@@ -5,3 +5,5 @@
 /test.xlsx
 /ttt.py
 /evaluation/result
+/evaluation/SC_MUL/res_16precision_16bitstream.txt
+/evaluation/SC_MUL/res_16precision_32bitstream.txt
