@@ -39,8 +39,8 @@ def GenerateScaledSeq(length,dataWidth):
     return Seq
 
     
-
-def scaled_mul(num_1,num_2,sobol_1,sobol_2,validSegWidth,sobolWidth,dataWidth=16):
+# mode: 1-> tow sobols   2-> sobol  and unary
+def scaled_mul(num_1,num_2,sobol_1,sobol_2,validSegWidth,sobolWidth,dataWidth=16 , mode=1):
     scaled_num_1 , num_1_shift = sliding_window(num_1,dataWidth= dataWidth  ,validSegWidth=validSegWidth)
     scaled_num_2 , num_2_shift = sliding_window(num_2,dataWidth= dataWidth  ,validSegWidth=validSegWidth)
     # print("validSegWidth =%d"%validSegWidth)
@@ -56,7 +56,8 @@ def scaled_mul(num_1,num_2,sobol_1,sobol_2,validSegWidth,sobolWidth,dataWidth=16
     # for j in sobol_2:
         # print(to_bin(j,dataWidth))
 
-    sobol_2 = GenerateScaledSeq(len(sobol_1),dataWidth)
+    if(mode==0):
+            sobol_2 = GenerateScaledSeq(len(sobol_1),dataWidth)
     bit_stream_1 = stream_gen(operator=  scaled_num_1,sobol_sequence=  sobol_1,validSegWidth= validSegWidth, sobolWidth= sobolWidth)
     bit_stream_2 = stream_gen(operator=  scaled_num_2,sobol_sequence=  sobol_2,validSegWidth= validSegWidth, sobolWidth= sobolWidth)
     # print("bit_stream_1:",bit_stream_1)
@@ -69,10 +70,10 @@ def scaled_mul(num_1,num_2,sobol_1,sobol_2,validSegWidth,sobolWidth,dataWidth=16
     else:
         res = scaled_res >>(-shiftSum)
     # print(res)
-    ED = abs(exact_res-res)
-    error= ED/exact_res
-    # print("num1 = %d, num2 = %d,error = "%(num_1,num_2),end='')
-    # print("%.4lf"%(error*100)+"%")
+    # ED = abs(exact_res-res)
+    # error= ED/exact_res
+    # if(error>=0.1):  
+        # print("%.4lf"%(error*100)+"%")
     return res
 
 def RepresentationError(num_1,Sobol_1,validSegWidth,sobolWidth,dataWidth=16):
