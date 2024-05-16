@@ -70,10 +70,10 @@ if __name__=="__main__":
 #########################################################                       
     dataWidth = 16                                    ###        
     sobolWidth = int(math.log(len(sobol_1),2))        ###       
-    validSegWidth = sobolWidth+1                      ###
-    # validSegWidth = 16                              ###
+    # validSegWidth = sobolWidth+1                      ###
+    validSegWidth = 16                              ###
     dataRange=(1,pow(2,16))                           ###
-    iterationRange=dataRange[1]                       ###
+    iterationRange=dataRange[1]*32                       ###
 #########################################################
 
     workingPath = os.getcwd()
@@ -110,8 +110,7 @@ if __name__=="__main__":
     group_15=[sobol_3,sobol_5]
     group_16=[sobol_3,sobol_6]
     
-    sobolGroups=[group_1,group_2,group_3,group_4,group_5,group_6,group_7,group_8,group_9,group_10,group_11,group_12,group_13,group_14,group_15,group_16]
-    # sobolGroups=[group_1]
+    sobolGroups=[group_1,group_2,group_3,group_4,group_5,group_6,group_7,group_8]
     # sobolGroups=[group_1,group_2,group_3]
 
     
@@ -135,6 +134,8 @@ if __name__=="__main__":
             )
             ED = abs(exact_res-isc_res)
             error= ED/exact_res
+            if error >=1: 
+                error = 1
             mredGroup[i]+=(error)
             # print(isc_res,error, end=' ')
         # print('\n')
